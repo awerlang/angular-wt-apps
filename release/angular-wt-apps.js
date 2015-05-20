@@ -29,7 +29,7 @@
     } ]);
     app.config([ "$provide", "$compileProvider", function($provide, $compileProvider) {
         if (!$compileProvider.debugInfoEnabled()) return;
-        $provide.decorator("$interpolate", function($delegate) {
+        $provide.decorator("$interpolate", [ "$delegate", function($delegate) {
             var interpolateWrap = function() {
                 var interpolationFn = $delegate.apply(this, arguments);
                 if (interpolationFn) {
@@ -46,7 +46,7 @@
             };
             angular.extend(interpolateWrap, $delegate);
             return interpolateWrap;
-        });
+        } ]);
     } ]);
     var app = angular.module("wt.apps");
     app.config([ "$provide", "$compileProvider", function($provide, $compileProvider) {
@@ -99,5 +99,48 @@
             var tmplHtml = view.innerHTML;
             $templateCache.put(tmplUrl, tmplHtml);
         }
+    } ]);
+    var app = angular.module("wt.apps");
+    function FullPageSpinner(START_REQUEST, END_REQUEST) {
+        return function(scope, element, attrs) {
+            element[0].style.display = "none";
+            scope.$on(START_REQUEST, function() {
+                element[0].style.display = "";
+            });
+            scope.$on(END_REQUEST, function() {
+                element[0].style.display = "none";
+            });
+        };
+    }
+    function SpinnerHttpInterceptor($q, $rootScope, START_REQUEST, END_REQUEST) {
+        var numLoadings = 0;
+        return {
+            request: function(config) {
+                numLoadings++;
+                $rootScope.$broadcast(START_REQUEST);
+                return config || $q.when(config);
+            },
+            requestError: function(rejection) {
+                if (--numLoadings === 0) {
+                    $rootScope.$broadcast(END_REQUEST);
+                }
+                return $q.reject(rejection);
+            },
+            response: function(response) {
+                if (--numLoadings === 0) {
+                    $rootScope.$broadcast(END_REQUEST);
+                }
+                return response || $q.when(response);
+            },
+            responseError: function(response) {
+                if (--numLoadings === 0) {
+                    $rootScope.$broadcast(END_REQUEST);
+                }
+                return $q.reject(response);
+            }
+        };
+    }
+    app.constant("START_REQUEST", "START_REQUEST").constant("END_REQUEST", "END_REQUEST").directive("wtFullPageSpinner", [ "START_REQUEST", "END_REQUEST", FullPageSpinner ]).factory("spinnerHttpInterceptor", [ "$q", "$rootScope", "START_REQUEST", "END_REQUEST", SpinnerHttpInterceptor ]).config([ "$httpProvider", function($httpProvider) {
+        $httpProvider.interceptors.push("spinnerHttpInterceptor");
     } ]);
 })();

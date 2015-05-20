@@ -54,8 +54,8 @@ function SpinnerHttpInterceptor($q, $rootScope, START_REQUEST, END_REQUEST) {
 
 app.constant('START_REQUEST', 'START_REQUEST')
 .constant('END_REQUEST', 'END_REQUEST')
-.directive('wtFullPageSpinner', FullPageSpinner)
-.factory('spinnerHttpInterceptor', SpinnerHttpInterceptor)
-.config(function ($httpProvider) {
+.directive('wtFullPageSpinner', ['START_REQUEST', 'END_REQUEST', FullPageSpinner])
+.factory('spinnerHttpInterceptor', ['$q', '$rootScope', 'START_REQUEST', 'END_REQUEST', SpinnerHttpInterceptor])
+.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push('spinnerHttpInterceptor');
-});
+}]);

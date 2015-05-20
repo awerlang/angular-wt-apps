@@ -25,7 +25,7 @@ app.config(['$provide', '$compileProvider', function ($provide, $compileProvider
 app.config(['$provide', '$compileProvider', function ($provide, $compileProvider) {
 	if (!$compileProvider.debugInfoEnabled()) return;
 
-	$provide.decorator("$interpolate", function ($delegate) {
+	$provide.decorator("$interpolate", ['$delegate', function ($delegate) {
 		var interpolateWrap = function () {
 			var interpolationFn = $delegate.apply(this, arguments);
 			if (interpolationFn) {
@@ -45,5 +45,5 @@ app.config(['$provide', '$compileProvider', function ($provide, $compileProvider
 
 		angular.extend(interpolateWrap, $delegate);
 		return interpolateWrap;
-	});
+	}]);
 }]);
