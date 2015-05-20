@@ -1,0 +1,34 @@
+{
+  "name": "angular-wt-apps",
+  "version": "0.1.0",
+  "description": "Features that you take for granted for your AngularJS projects",
+  "main": "release/angular-wt-apps.js",
+  "scripts": {
+    "build": "./node_modules/.bin/uglifyjs src/module.js src/default-styling.js src/development.js src/exception-shield.js src/filters.js src/html-spa.js src/spinner.js -b -e --preamble \"// https://github.com/awerlang/angular-wt-apps\" -o release/angular-wt-apps.js",
+    "release": "./node_modules/.bin/uglifyjs src/module.js src/default-styling.js src/development.js src/exception-shield.js src/filters.js src/html-spa.js src/spinner.js -c -e --preamble \"// https://github.com/awerlang/angular-wt-apps\" -o release/angular-wt-apps.min.js",
+    "css": "type src\\spinner.css > release\\angular-wt-apps.css",
+    "cssmin": "type src\\spinner.css | \"./node_modules/.bin/cleancss\" -o release\\angular-wt-apps.min.css",
+    "test": "karma start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/awerlang/angular-wt-apps.git"
+  },
+  "keywords": [
+    "angular",
+    "angularjs",
+    "apps",
+    "spa",
+    "crosscutting"
+  ],
+  "author": "André Werlang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/awerlang/angular-wt-apps/issues"
+  },
+  "homepage": "https://github.com/awerlang/angular-wt-apps",
+  "devDependencies": {
+    "clean-css": "^3.2.10",
+    "uglify-js": "^2.4.20"
+  }
+}

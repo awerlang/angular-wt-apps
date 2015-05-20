@@ -1,0 +1,28 @@
+{
+  "name": "angular-wt-apps",
+  "version": "0.1.0",
+  "homepage": "https://github.com/awerlang/angular-wt-apps",
+  "authors": [
+    "André Werlang"
+  ],
+  "description": "Features that you take for granted for your AngularJS projects",
+  "main": [
+    "release/angular-wt-apps.js",
+    "release/angular-wt-apps.css"
+  ],
+  "keywords": [
+    "angular",
+    "angularjs",
+    "apps",
+    "spa",
+    "crosscutting"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
