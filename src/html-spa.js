@@ -29,3 +29,16 @@ app.run(['$templateCache', '$document', function ($templateCache, $document) {
         $templateCache.put(tmplUrl, tmplHtml);
     }
 }]);
+
+app.run(['$rootScope', '$injector', function ($rootScope, $injector) {
+    if (!$injector.has('$modalStack')) return;
+
+    var $modalStack = $injector.get('$modalStack');
+    $rootScope.$on('$locationChangeStart', function (event) {
+        var top = $modalStack.getTop();
+        if (top) {
+            $modalStack.dismissAll();
+            event.preventDefault();
+        }
+    });
+}]);
