@@ -125,10 +125,15 @@
     }
     function SpinnerHttpInterceptor($q, $rootScope, START_REQUEST, END_REQUEST) {
         var numLoadings = 0;
+        const skip = function(config) {
+            return config.params && config.params.bg === true;
+        };
         return {
             request: function(config) {
-                numLoadings++;
-                $rootScope.$broadcast(START_REQUEST);
+                if (!skip(config)) {
+                    numLoadings++;
+                    $rootScope.$broadcast(START_REQUEST);
+                }
                 return config || $q.when(config);
             },
             requestError: function(rejection) {
@@ -138,14 +143,18 @@
                 return $q.reject(rejection);
             },
             response: function(response) {
-                if (--numLoadings === 0) {
-                    $rootScope.$broadcast(END_REQUEST);
+                if (!skip(response.config)) {
+                    if (--numLoadings === 0) {
+                        $rootScope.$broadcast(END_REQUEST);
+                    }
                 }
                 return response || $q.when(response);
             },
             responseError: function(response) {
-                if (--numLoadings === 0) {
-                    $rootScope.$broadcast(END_REQUEST);
+                if (!skip(response.config)) {
+                    if (--numLoadings === 0) {
+                        $rootScope.$broadcast(END_REQUEST);
+                    }
                 }
                 return $q.reject(response);
             }
