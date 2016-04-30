@@ -22,7 +22,7 @@ function FullPageSpinner(START_REQUEST, END_REQUEST) {
  */
 function SpinnerHttpInterceptor($q, $rootScope, START_REQUEST, END_REQUEST) {
     var numLoadings = 0;
-    const skip = function (config) {
+    var skip = function (config) {
         return config.params && config.params.bg === true;
     };
 
